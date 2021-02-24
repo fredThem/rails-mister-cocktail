@@ -6,7 +6,7 @@ ruby '2.6.6'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.3'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.1'
+gem "pg"
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 # Use SCSS for stylesheets
@@ -52,4 +52,5 @@ gem 'rails-controller-testing', group: [:test]
 gem 'rspec-rails', group: [:test]
 gem 'simple_form'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-3
+gem 'dotenv-rails', groups: [:development, :test]
+
