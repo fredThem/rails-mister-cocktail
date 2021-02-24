@@ -83,20 +83,24 @@ end
 
 
 def cocktails_by_category
-  # puts 'cleaning up cocktail'
-  # Cocktail.delete_all
+  puts 'cleaning up cocktail'
+  Cocktail.delete_all
 
   drinks_categories.each do |category|
     # p category.class
     serialized_drinks = serialize("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=#{category.sub(" ", "_")}")
     serialized_drinks['drinks'].each do |drink|
-      drink.each do |attribute|
-        attributes 
-        # TODO list out the attributes
-      end
+      # byebug
+      cocktail = Cocktail.ceate!(
+        name: (drink["strDrink"])
+        img_url: (drink["strDrinkThumb"])
+        category: (category)
+      )
+      puts cocktail
     end
   end
-
+  byebug
+  puts @cocktails.length
 end
 
 cocktails_by_category
