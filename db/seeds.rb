@@ -9,13 +9,48 @@
 require 'json'
 require 'open-uri'
 
+# thecocktaildb API
+# https://www.thecocktaildb.com/api.php
+
+# Lookup full cocktail details by id
+# https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11007
+
+# Search cocktail by name
+# https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita
+
+# Search by ingredient
+# https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Gin
+# https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Vodka
+
+# Filter by Category
+# https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Ordinary_Drink
+# https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail
+
+def serialize(url)
+  data_serialized = open(url).read
+  data = JSON.parse(data_serialized)
+end
+
+def drinks_categories
+  categories = []
+  puts 'listing categories'
+  url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list'
+  serialized_categories = serialize(url)
+  # puts serialized_categories
+  serialized_categories['drinks'].each do |category|
+    value = category.values[0]
+    categories << value unless value.empty?
+  end
+  categories
+  # ["Ordinary Drink", "Cocktail", "Milk / Float / Shake", "Other/Unknown", "Cocoa", "Shot", "Coffee / Tea", "Homemade Liqueur", "Punch / Party Drink", "Beer", "Soft Drink / Soda"]
+end
+
 def seed_ingredients
   puts 'Cleaning database...'
   Ingredient.delete_all
 
   url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list'
-  drink_serialized = open(url).read
-  drink = JSON.parse(drink_serialized)
+  drink = serialize(url)
 
   drink['drinks'].each do |i|
     ingredient = Ingredient.create!(
@@ -25,25 +60,43 @@ def seed_ingredients
   end
 end
 
-def seed_cocktails
-  puts 'cleaning up cocktail'
-  Cocktail.delete_all
-  url_base = 'https://source.unsplash.com/600x400/?'
-  cocktails = [
-    'Bourbon Old Fashioned',
-    'Negroni',
-    'Manhattan',
-    'Long Island Iced Tea',
-    'White Russian'
-  ]
+# ! previous seed_cocktails BEGIN
+# def seed_cocktails
+#   puts 'cleaning up cocktail'
+#   Cocktail.delete_all
+#   cocktails = [
+#     'Bourbon Old Fashioned',
+#     'Negroni',
+#     'Manhattan',
+#     'Long Island Iced Tea',
+#     'White Russian'
+#   ]
 
-  cocktails.each do |attributes|
-    cocktail = Cocktail.create!(
-      name: attributes
-      # img_url: url_base + attributes.slice(' ')
-    )
-    puts cocktail.name
+#   cocktails.each do |attributes|
+#     cocktail = Cocktail.create!(
+#       name: attributes
+#     )
+#     puts cocktail.name
+#   end
+# end
+# ! previous seed_cocktails END
+
+
+def cocktails_by_category
+  # puts 'cleaning up cocktail'
+  # Cocktail.delete_all
+
+  drinks_categories.each do |category|
+    # p category.class
+    serialized_drinks = serialize("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=#{category.sub(" ", "_")}")
+    serialized_drinks['drinks'].each do |drink|
+      drink.each do |attribute|
+        attributes 
+        # TODO list out the attributes
+      end
+    end
   end
+
 end
 
-seed_cocktails
+cocktails_by_category
