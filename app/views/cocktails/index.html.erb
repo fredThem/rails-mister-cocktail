@@ -1,7 +1,26 @@
-<h1>Cocktails</h1>
-
-
-
-
-
-</div>
+<main>
+  <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto">
+      <h1 class="display-4 fw-normal">Drinks</h1>
+      <p class="lead fw-normal">
+        <%= Faker::Lorem.sentences.join(" ") %>
+      </p>
+      <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+  </div>
+  <div class="container pb-5">
+    <%= link_to 'New Cocktail', new_cocktail_path, class: "btn btn-primary btn-lg my-4" %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+      <%# debug @cocktail %>
+      <% @cocktails.each do |cocktail| %>
+        <div class="col p-0">
+          <div class="card p-3">
+            <%= link_to cocktail.name, cocktail_path(cocktail) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</main>

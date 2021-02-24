@@ -2,6 +2,7 @@ class CocktailsController < ApplicationController
   before_action :set_cocktail, only: [:show]
 
   def index
+    # byebug
     @cocktails = Cocktail.all
   end
 
@@ -11,18 +12,26 @@ class CocktailsController < ApplicationController
 
   def create
     @cocktail = Cocktail.new(cocktail_params)
-    @cocktail.save
 
-    # no need for app/views/cocktails/create.html.erb
-    redirect_to cocktail_path(@cocktail)
+    if @cocktail.save
+      redirect_to @cocktail
+    else
+      render "new"
+    end
   end
 
-  def show; end
+  def show
+        @dose = Dose.new
+
+  end
 
   private
 
   def set_cocktail
     @cocktail = Cocktail.find(params[:id])
+  end
+  def set_dose
+    @dose = Dose.find(params[:id])
   end
 
   def cocktail_params

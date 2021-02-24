@@ -28,7 +28,7 @@ end
 def seed_cocktails
   puts 'cleaning up cocktail'
   Cocktail.delete_all
-  url_base = "https://source.unsplash.com/600x400/?"
+  url_base = 'https://source.unsplash.com/600x400/?'
   cocktails = [
     'Bourbon Old Fashioned',
     'Negroni',
