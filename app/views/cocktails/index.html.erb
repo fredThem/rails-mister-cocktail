@@ -16,9 +16,14 @@
       <%# debug @cocktail %>
       <% @cocktails.each do |cocktail| %>
         <div class="col p-0">
-          <div class="card p-3">
-            <%= link_to cocktail.name, cocktail_path(cocktail) %>
+          <%= link_to cocktail_path(cocktail) do %>
+          <div class="card">
+          <%= image_tag(cocktail.img_url, height: '200px', width: '100%', style: "object-fit: contain") %>
+            <div class="card-body">
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
           </div>
+          <% end %>
         </div>
       <% end %>
     </div>

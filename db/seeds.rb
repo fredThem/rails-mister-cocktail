@@ -91,7 +91,7 @@ def cocktails_by_category
     serialized_drinks = serialize("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=#{category.sub(" ", "_")}")
     serialized_drinks['drinks'].each do |drink|
       # byebug
-      cocktail = Cocktail.ceate!(
+      cocktail = Cocktail.create!(
         name: (drink["strDrink"]),
         img_url: (drink["strDrinkThumb"]),
         category: (category)
@@ -99,8 +99,9 @@ def cocktails_by_category
       puts cocktail
     end
   end
-  byebug
-  puts @cocktails.length
+  # byebug
+  # puts @cocktails.length
 end
 
 cocktails_by_category
+seed_ingredients
