@@ -92,8 +92,8 @@ def cocktails_by_category
     serialized_drinks['drinks'].each do |drink|
       # byebug
       cocktail = Cocktail.ceate!(
-        name: (drink["strDrink"])
-        img_url: (drink["strDrinkThumb"])
+        name: (drink["strDrink"]),
+        img_url: (drink["strDrinkThumb"]),
         category: (category)
       )
       puts cocktail
