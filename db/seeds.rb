@@ -38,6 +38,7 @@ def drinks_categories
   serialized_categories = serialize(url)
   # puts serialized_categories
   serialized_categories['drinks'].each do |category|
+    # byebug
     value = category.values[0]
     categories << value unless value.empty?
   end
@@ -59,27 +60,6 @@ def seed_ingredients
     puts ingredient.name
   end
 end
-
-# ! previous seed_cocktails BEGIN
-# def seed_cocktails
-#   puts 'cleaning up cocktail'
-#   Cocktail.delete_all
-#   cocktails = [
-#     'Bourbon Old Fashioned',
-#     'Negroni',
-#     'Manhattan',
-#     'Long Island Iced Tea',
-#     'White Russian'
-#   ]
-
-#   cocktails.each do |attributes|
-#     cocktail = Cocktail.create!(
-#       name: attributes
-#     )
-#     puts cocktail.name
-#   end
-# end
-# ! previous seed_cocktails END
 
 def cocktails_by_category
   puts 'cleaning up cocktail'
@@ -109,6 +89,7 @@ def seed_doses
   
   Cocktail.all.each do |cocktail|
     cocktail.doses.delete_all
+    # byebug
     api_url = url + cocktail.name
     serialized_cocktail = serialize(api_url)
     serialized_cocktail['drinks'].each do |attribute|
@@ -116,38 +97,33 @@ def seed_doses
       index = 1
       15.times do
         # byebug
-                
-
         measure = attribute["strMeasure#{index}"]
         unless measure.nil?
           ingredient = attribute["strIngredient#{index}"]
           p "#{index}) #{measure} #{ingredient}"
           ingredient_id = Ingredient.find_or_create_by(name: ingredient).id
-          
           new_dose = {
             cocktail_id: cocktail.id,
             ingredient_id: ingredient_id,
             description: measure
           }
 
-          # dose = Dose.create!(new_dose)
           dose = cocktail.doses.create!(new_dose)
           # byebug
           # p dose
           # new_dose.save!
         end
-        # Ingredient(id: integer, name: string, created_at: datetime, updated_at: datetime)
-        # Dose(id: integer, description: string, cocktail_id: integer, ingredient_id: integer, created_at: datetime, updated_at: datetime)
         index += 1
       end
       index = 1
       # byebug
     end
     # cocktail << value unless value.empty?
-    byebug
+    # byebug
   end
 end
-seed_doses
+
 
 # cocktails_by_category
 # seed_ingredients
+seed_doses
