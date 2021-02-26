@@ -48,10 +48,10 @@ end
 def seed_ingredients
   puts 'Cleaning database...'
   Ingredient.delete_all
-
+  
   url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list'
   drink = serialize(url)
-
+  
   drink['drinks'].each do |i|
     ingredient = Ingredient.create!(
       name: i['strIngredient1']
@@ -81,20 +81,19 @@ end
 # end
 # ! previous seed_cocktails END
 
-
 def cocktails_by_category
   puts 'cleaning up cocktail'
   Cocktail.delete_all
-
+  
   drinks_categories.each do |category|
     # p category.class
-    serialized_drinks = serialize("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=#{category.sub(" ", "_")}")
+    serialized_drinks = serialize("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=#{category.sub(' ', '_')}")
     serialized_drinks['drinks'].each do |drink|
       # byebug
       cocktail = Cocktail.create!(
-        name: (drink["strDrink"]),
-        img_url: (drink["strDrinkThumb"]),
-        category: (category)
+        name: (drink['strDrink']),
+        img_url: (drink['strDrinkThumb']),
+        category: category
       )
       puts cocktail
     end
@@ -103,5 +102,52 @@ def cocktails_by_category
   # puts @cocktails.length
 end
 
-cocktails_by_category
-seed_ingredients
+def seed_doses
+  p Cocktail.first
+  url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s='
+  # doses = serialize(url)
+  
+  Cocktail.all.each do |cocktail|
+    cocktail.doses.delete_all
+    api_url = url + cocktail.name
+    serialized_cocktail = serialize(api_url)
+    serialized_cocktail['drinks'].each do |attribute|
+      p cocktail
+      index = 1
+      15.times do
+        # byebug
+                
+
+        measure = attribute["strMeasure#{index}"]
+        unless measure.nil?
+          ingredient = attribute["strIngredient#{index}"]
+          p "#{index}) #{measure} #{ingredient}"
+          ingredient_id = Ingredient.find_or_create_by(name: ingredient).id
+          
+          new_dose = {
+            cocktail_id: cocktail.id,
+            ingredient_id: ingredient_id,
+            description: measure
+          }
+
+          # dose = Dose.create!(new_dose)
+          dose = cocktail.doses.create!(new_dose)
+          # byebug
+          # p dose
+          # new_dose.save!
+        end
+        # Ingredient(id: integer, name: string, created_at: datetime, updated_at: datetime)
+        # Dose(id: integer, description: string, cocktail_id: integer, ingredient_id: integer, created_at: datetime, updated_at: datetime)
+        index += 1
+      end
+      index = 1
+      # byebug
+    end
+    # cocktail << value unless value.empty?
+    byebug
+  end
+end
+seed_doses
+
+# cocktails_by_category
+# seed_ingredients
